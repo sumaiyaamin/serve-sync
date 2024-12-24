@@ -1,6 +1,5 @@
-
-
 import { motion } from 'framer-motion';
+import VolunteerNeeds from './VolunteerNeeds';
 
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
@@ -82,7 +81,9 @@ const Home = () => {
                 </Slider>
             </section>
 
-          
+          <section>
+          <VolunteerNeeds />
+          </section>
 
             {/* Impact Statistics Section */}
             <section className="py-20 bg-teal-600 text-white">
