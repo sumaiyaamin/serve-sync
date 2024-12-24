@@ -1,16 +1,9 @@
 
-import './App.css'
+import { RouterProvider } from 'react-router-dom';
+import { router } from './routes/Routes';
 
 function App() {
-  
-
-  return (
-    <>
-     
-      <h1>Serve Sync</h1>
-      
-    </>
-  )
+    return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

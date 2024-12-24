@@ -1,0 +1,12 @@
+
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-wrapper {
+  margin-top: 80px; 
+  flex: 1;
+  padding: 20px;
+}
