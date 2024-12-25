@@ -218,7 +218,7 @@ const ManagePosts = () => {
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                    {console.log('My Requests:', myRequests)} {/* Debugger: Log myRequests */}
+                    
                     {myRequests.map((request) => (
                         <tr key={request._id}>
                             <td className="px-6 py-4 whitespace-nowrap">{request.postTitle}</td>

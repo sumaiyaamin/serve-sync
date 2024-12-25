@@ -4,39 +4,50 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
+import { FaSearch, FaMapMarkerAlt, FaClock, FaTag } from 'react-icons/fa';
 
-// Card Component
+// Card Component with enhanced styling
 const VolunteerCard = ({ post }) => {
     const { _id, thumbnail, title, category, deadline, location } = post;
 
     return (
         <motion.div
+            whileHover={{ y: -5 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300"
+            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
         >
-            <img 
-                src={thumbnail} 
-                alt={title} 
-                className="w-full h-48 object-cover"
-            />
+            <div className="relative">
+                <img 
+                    src={thumbnail} 
+                    alt={title} 
+                    className="w-full h-48 object-cover"
+                />
+                <span className="absolute top-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm">
+                    {category}
+                </span>
+            </div>
             <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2 truncate">{title}</h3>
-                <div className="space-y-2">
-                    <p className="text-gray-600">
-                        <span className="font-medium">Category:</span> {category}
-                    </p>
-                    <p className="text-gray-600">
-                        <span className="font-medium">Location:</span> {location}
-                    </p>
-                    <p className="text-gray-600">
-                        <span className="font-medium">Deadline:</span>{' '}
-                        {new Date(deadline).toLocaleDateString()}
-                    </p>
+                <h3 className="text-xl font-semibold mb-4 text-gray-800 hover:text-orange-500 transition-colors duration-200">
+                    {title}
+                </h3>
+                <div className="space-y-3">
+                    <div className="flex items-center text-gray-600">
+                        <FaMapMarkerAlt className="text-orange-500 mr-2" />
+                        <span>{location}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                        <FaClock className="text-orange-500 mr-2" />
+                        <span>Deadline: {new Date(deadline).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                        <FaTag className="text-orange-500 mr-2" />
+                        <span>{category}</span>
+                    </div>
                 </div>
                 <Link
                     to={`/volunteer-posts/${_id}`}
-                    className="mt-4 inline-block w-full text-center px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors duration-200"
+                    className="mt-6 inline-block w-full text-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200 shadow-md hover:shadow-lg"
                 >
                     View Details
                 </Link>
@@ -84,7 +95,9 @@ const AllVolunteerPosts = () => {
     // Fetch all posts
     const fetchAllPosts = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/volunteer-posts');
+            const response = await axios.get('http://localhost:5000/volunteer-posts', {
+                withCredentials: true
+            });
             setPosts(response.data);
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -107,40 +120,52 @@ const AllVolunteerPosts = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-12">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-6">
-                        All Volunteer Opportunities
+                <motion.div 
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="text-center mb-12"
+                >
+                    <h1 className="text-4xl font-bold text-gray-900 mb-6">
+                        Volunteer <span className="text-orange-500">Opportunities</span>
                     </h1>
                     
-                    {/* Search Bar */}
+                    {/* Enhanced Search Bar */}
                     <div className="max-w-xl mx-auto relative">
-                        <input
-                            type="text"
-                            placeholder="Search by post title..."
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        />
-                        {searchLoading && (
-                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-teal-600"></div>
-                            </div>
-                        )}
+                        <div className="relative">
+                            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Search volunteer opportunities..."
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                                className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent shadow-sm transition duration-200"
+                            />
+                            {searchLoading && (
+                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-orange-500"></div>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                </motion.div>
 
                 {posts.length === 0 ? (
-                    <div className="text-center text-gray-600">
-                        <p className="text-xl">No volunteer posts found</p>
-                    </div>
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-center py-12"
+                    >
+                        <p className="text-xl text-gray-600">No volunteer opportunities found</p>
+                        <p className="text-gray-500 mt-2">Try adjusting your search terms</p>
+                    </motion.div>
                 ) : (
                     <motion.div 
                         initial={{ opacity: 0 }}
@@ -148,8 +173,15 @@ const AllVolunteerPosts = () => {
                         transition={{ duration: 0.5 }}
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                     >
-                        {posts.map((post) => (
-                            <VolunteerCard key={post._id} post={post} />
+                        {posts.map((post, index) => (
+                            <motion.div
+                                key={post._id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                            >
+                                <VolunteerCard post={post} />
+                            </motion.div>
                         ))}
                     </motion.div>
                 )}
