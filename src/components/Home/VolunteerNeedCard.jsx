@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaRegClock, FaTag } from 'react-icons/fa';
 
 const VolunteerNeedCard = ({ post }) => {
-    const {_id, thumbnail, title, category, deadline, location } = post;
+    const { _id, thumbnail, title, category, deadline, location } = post;
     const formattedDeadline = new Date(deadline);
 
     return (
@@ -43,7 +43,7 @@ const VolunteerNeedCard = ({ post }) => {
                     </div>
                 </div>
                 <Link
-                    to={'/volunteer-posts/${_id}'}
+                    to={`/volunteer-posts/${_id}`} 
                     className="mt-6 inline-block w-full text-center px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors duration-200 shadow-md hover:shadow-lg"
                 >
                     View Details

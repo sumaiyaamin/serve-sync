@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BsGrid, BsListUl } from 'react-icons/bs'; // Import icons
 import axios from 'axios';
 import VolunteerNeedCard from './VolunteerNeedCard';
+import { BsGrid, BsListUl } from 'react-icons/bs';
 
 const VolunteerNeeds = () => {
     const [volunteerPosts, setVolunteerPosts] = useState([]);
@@ -15,9 +15,12 @@ const VolunteerNeeds = () => {
         const fetchVolunteerPosts = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/volunteer-posts/upcoming', {
-                    params: { limit: 6 },
+                    params: {
+                        limit: 6
+                    },
                     withCredentials: true
                 });
+                console.log('Fetched posts:', response.data);
                 setVolunteerPosts(response.data);
                 setError(null);
             } catch (error) {
@@ -156,7 +159,7 @@ const VolunteerNeeds = () => {
                                         </td>
                                         <td className="py-4 px-6">
                                             <Link
-                                                to={'/volunteer-posts/${post._id}'}
+                                                to={`/volunteer-posts/${post._id}`}
                                                 className="text-orange-500 hover:text-orange-600 font-medium"
                                             >
                                                 View Details →
