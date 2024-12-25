@@ -9,13 +9,12 @@ import PrivateRoute from './PrivateRoute';
 import VolunteerPostDetails from '../components/VolunteerPostDetails/VolunteerPostDetails';
 import AddVolunteerPost from '../components/AddVolunteerPost/AddVolunteerPost';
 import AllVolunteerPosts from '../components/AllVolunteerPosts/AllVolunteerPosts';
-
+import ManagePosts from '../components/ManagePosts/ManagePosts'; // Import the ManagePosts component
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <MainLayout />,
-       
         children: [
             {
                 path: "/",
@@ -49,7 +48,14 @@ export const router = createBrowserRouter([
                 path: "/all-volunteer-posts",
                 element: <AllVolunteerPosts />
             },
-            
+            {
+                path: "/manage-my-posts", // New route for managing posts
+                element: (
+                    <PrivateRoute>
+                        <ManagePosts />
+                    </PrivateRoute>
+                )
+            },
         ]
     }
 ]);

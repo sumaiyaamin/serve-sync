@@ -1,5 +1,3 @@
-// src/pages/AddVolunteerPost.jsx
-
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
@@ -38,7 +36,7 @@ const AddVolunteerPost = () => {
             category: form.category.value,
             location: form.location.value,
             volunteersNeeded: parseInt(form.volunteersNeeded.value),
-            deadline: new Date(form.deadline.value), 
+            deadline: deadline, 
             organizerName: user.displayName,
             organizerEmail: user.email,
             createdAt: new Date().toISOString(),
@@ -74,7 +72,7 @@ const AddVolunteerPost = () => {
                 <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-lg shadow">
                     {/* Thumbnail URL */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="thumbnail">
                             Thumbnail URL
                         </label>
                         <input
@@ -82,12 +80,13 @@ const AddVolunteerPost = () => {
                             name="thumbnail"
                             required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                            aria-required="true"
                         />
                     </div>
 
                     {/* Title */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="title">
                             Post Title
                         </label>
                         <input
@@ -95,12 +94,13 @@ const AddVolunteerPost = () => {
                             name="title"
                             required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                            aria-required="true"
                         />
                     </div>
 
                     {/* Description */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="description">
                             Description
                         </label>
                         <textarea
@@ -108,18 +108,20 @@ const AddVolunteerPost = () => {
                             rows={4}
                             required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                            aria-required="true"
                         />
                     </div>
 
                     {/* Category */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="category">
                             Category
                         </label>
                         <select
                             name="category"
                             required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                            aria-required="true"
                         >
                             {categories.map((category) => (
                                 <option key={category} value={category}>
@@ -131,7 +133,7 @@ const AddVolunteerPost = () => {
 
                     {/* Location */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="location">
                             Location
                         </label>
                         <input
@@ -139,12 +141,13 @@ const AddVolunteerPost = () => {
                             name="location"
                             required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                            aria-required="true"
                         />
                     </div>
 
                     {/* Volunteers Needed */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="volunteersNeeded">
                             Number of Volunteers Needed
                         </label>
                         <input
@@ -153,12 +156,13 @@ const AddVolunteerPost = () => {
                             min="1"
                             required
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                            aria-required="true"
                         />
                     </div>
 
                     {/* Deadline */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="deadline">
                             Deadline
                         </label>
                         <DatePicker
@@ -166,6 +170,7 @@ const AddVolunteerPost = () => {
                             onChange={(date) => setDeadline(date)}
                             minDate={new Date()}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                            aria-required="true"
                         />
                     </div>
 

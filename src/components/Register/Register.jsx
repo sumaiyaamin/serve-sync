@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
-// axios with credentials
+
 const axiosSecure = axios.create({
     baseURL: 'http://localhost:5000',
     withCredentials: true

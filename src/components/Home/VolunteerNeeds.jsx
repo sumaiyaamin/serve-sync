@@ -1,5 +1,3 @@
-// src/components/Home/VolunteerNeeds.jsx
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -10,6 +8,7 @@ const VolunteerNeeds = () => {
     const [volunteerPosts, setVolunteerPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [layout, setLayout] = useState('grid'); // State to manage layout
 
     useEffect(() => {
         const fetchVolunteerPosts = async () => {
@@ -33,6 +32,10 @@ const VolunteerNeeds = () => {
 
         fetchVolunteerPosts();
     }, []);
+
+    const toggleLayout = () => {
+        setLayout((prevLayout) => (prevLayout === 'grid' ? 'table' : 'grid'));
+    };
 
     if (loading) {
         return (
@@ -72,7 +75,17 @@ const VolunteerNeeds = () => {
                 >
                     Volunteer Needs Now
                 </motion.h2>
-                
+
+                {/* Toggle Layout Button */}
+                <div className="text-center mb-4">
+                    <button
+                        onClick={toggleLayout}
+                        className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors duration-200"
+                    >
+                        {layout === 'grid' ? 'Switch to Table Layout' : 'Switch to Card Layout'}
+                    </button>
+                </div>
+
                 {volunteerPosts.length === 0 ? (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -81,7 +94,7 @@ const VolunteerNeeds = () => {
                     >
                         <p className="text-lg">No volunteer opportunities available at the moment.</p>
                     </motion.div>
-                ) : (
+                ) : layout === 'grid' ? (
                     <motion.div 
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
@@ -99,21 +112,39 @@ const VolunteerNeeds = () => {
                             </motion.div>
                         ))}
                     </motion.div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full bg-white border border-gray-300">
+                            <thead>
+                                <tr className="bg-gray-200">
+                                    <th className="py-2 px-4 border-b">Title</th>
+                                    <th className="py-2 px-4 border-b">Category</th>
+                                    <th className="py-2 px-4 border-b">Location</th>
+                                    <th className="py-2 px-4 border-b">Deadline</th>
+                                    <th className="py-2 px-4 border-b">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {volunteerPosts.map((post) => (
+                                    <tr key={post._id} className="hover:bg-gray-100">
+                                        <td className="py-2 px-4 border-b">{post.title}</td>
+                                        <td className="py-2 px-4 border-b">{post.category}</td>
+                                        <td className="py-2 px-4 border-b">{post.location}</td>
+                                        <td className="py-2 px-4 border-b">{new Date(post.deadline).toLocaleDateString()}</td>
+                                        <td className="py-2 px-4 border-b">
+                                            <Link
+                                                to={`/volunteer-posts/${post._id}`}
+                                                className="text-teal-600 hover:underline"
+                                            >
+                                                View Details
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
-
-                <motion.div 
-                    initial={{ y: 20, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.6 }}
-                    className="text-center mt-12"
-                >
-                    <Link
-                        to="/all-volunteer-posts"
-                        className="inline-block px-6 py-3 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors duration-200"
-                    >
-                        See All Opportunities
-                    </Link>
-                </motion.div>
             </div>
         </motion.section>
     );

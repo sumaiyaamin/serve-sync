@@ -1,15 +1,13 @@
-// src/main.jsx
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import MainApp from './App'; // Import MainApp
 import AuthProvider from './providers/AuthProvider';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <AuthProvider>
-            <App />
+            <MainApp /> {/* Render MainApp instead of App */}
         </AuthProvider>
     </React.StrictMode>
 );

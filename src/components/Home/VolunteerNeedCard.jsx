@@ -1,10 +1,11 @@
-// src/components/Home/VolunteerNeedCard.jsx
-
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const VolunteerNeedCard = ({ post }) => {
     const { _id, thumbnail, title, category, deadline, location } = post;
+
+    
+    const formattedDeadline = new Date(deadline);
 
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300">
@@ -24,7 +25,7 @@ const VolunteerNeedCard = ({ post }) => {
                     </p>
                     <p className="text-gray-600">
                         <span className="font-medium">Deadline:</span>{' '}
-                        {new Date(deadline).toLocaleDateString()}
+                        {formattedDeadline.toLocaleDateString()} 
                     </p>
                 </div>
                 <Link
@@ -44,7 +45,10 @@ VolunteerNeedCard.propTypes = {
         thumbnail: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         category: PropTypes.string.isRequired,
-        deadline: PropTypes.string.isRequired,
+        deadline: PropTypes.oneOfType([ 
+            PropTypes.string,
+            PropTypes.instanceOf(Date)
+        ]).isRequired,
         location: PropTypes.string.isRequired,
     }).isRequired,
 };
