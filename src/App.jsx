@@ -5,7 +5,7 @@ import { router } from './routes/Routes';
 import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import LoadingSpinner from './components/shared/LoadingSpinner';
-import { ThemeProvider } from './context/ThemeContext'; // Import ThemeProvider
+import { ThemeProvider } from './context/ThemeContext'; 
 
 function App() {
     const [isLoading, setIsLoading] = useState(true);

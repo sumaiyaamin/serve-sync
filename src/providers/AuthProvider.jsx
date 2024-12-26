@@ -7,42 +7,71 @@ import {
     signInWithEmailAndPassword, 
     signInWithPopup, 
     signOut, 
-    updateProfile 
+    updateProfile, 
+    
 } from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export const AuthContext = createContext(null);
-const googleProvider = new GoogleAuthProvider();
 
-// axios instance with credentials
+export const AuthContext = createContext(null);
+
 const axiosSecure = axios.create({
-    baseURL: 'http://localhost:5000',
-    withCredentials: true
+    baseURL: 'https://serve-sync-server.vercel.app',
+    withCredentials: true,
+    timeout: 8000
 });
+
+// Add interceptors to handle requests and responses
+axiosSecure.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+axiosSecure.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+            // Handle unauthorized access
+            await auth.signOut();
+            localStorage.removeItem('accessToken');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
+// Export axiosSecure for use in other components
+export { axiosSecure };
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    
     const createUser = async (email, password) => {
         setLoading(true);
         try {
             const result = await createUserWithEmailAndPassword(auth, email, password);
-            // Get token and set cookie
-            await axiosSecure.post('/jwt', { email: result.user.email });
+            const response = await axiosSecure.post('/jwt', { email: result.user.email });
+            localStorage.setItem('accessToken', response.data.token);
             return result;
-        } catch (err) {
-            toast.error(err.message.replace('Firebase:', ''));
-            throw err;
+        } catch (error) {
+            toast.error(error.message.replace('Firebase:', ''));
+            throw error;
         } finally {
             setLoading(false);
         }
     };
 
-    // Update user profile
     const updateUserProfile = async (name, photo) => {
         setLoading(true);
         try {
@@ -50,126 +79,137 @@ const AuthProvider = ({ children }) => {
                 displayName: name,
                 photoURL: photo,
             });
-            setUser((prev) => ({
+            setUser(prev => ({
                 ...prev,
                 displayName: name,
                 photoURL: photo,
             }));
-        } catch (err) {
-            toast.error(err.message.replace('Firebase:', ''));
-            throw err;
+        } catch (error) {
+            toast.error(error.message.replace('Firebase:', ''));
+            throw error;
         } finally {
             setLoading(false);
         }
     };
 
- 
     const signIn = async (email, password) => {
         setLoading(true);
         try {
             const result = await signInWithEmailAndPassword(auth, email, password);
-            // Get token and set cookie
-            await axiosSecure.post('/jwt', { email: result.user.email });
+            const response = await axiosSecure.post('/jwt', { email: result.user.email });
+            localStorage.setItem('accessToken', response.data.token);
             return result;
-        } catch (err) {
-            if (err.code === 'auth/invalid-credential') {
+        } catch (error) {
+            if (error.code === 'auth/invalid-credential') {
                 toast.error('Invalid email or password');
             } else {
-                toast.error(err.message.replace('Firebase:', ''));
+                toast.error(error.message.replace('Firebase:', ''));
             }
-            throw err;
+            throw error;
         } finally {
             setLoading(false);
         }
     };
 
-    
     const googleSignIn = async () => {
         setLoading(true);
+        const provider = new GoogleAuthProvider();
         try {
-            const result = await signInWithPopup(auth, googleProvider);
+            const result = await signInWithPopup(auth, provider);
             
-            // Save or update user in database
-            if (result.user) {
-                try {
-                    await axiosSecure.post('/users', {
-                        name: result.user.displayName,
-                        email: result.user.email,
-                        photo: result.user.photoURL,
-                        role: 'user',
-                        createdAt: new Date(),
-                    });
-                    // Get token and set cookie
-                    await axiosSecure.post('/jwt', { email: result.user.email });
-                } catch (err) {
-                    
-                    if (!err.response?.data?.message?.includes('already exists')) {
-                        console.error('Error saving user:', err);
-                    }
+            // Get JWT token
+            const response = await axiosSecure.post('/jwt', { 
+                email: result.user.email 
+            });
+            localStorage.setItem('accessToken', response.data.token);
+            
+            // Save user data
+            try {
+                await axiosSecure.post('/users', {
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    photo: result.user.photoURL,
+                    role: 'user',
+                    createdAt: new Date()
+                });
+            } catch (error) {
+                if (!error.response?.data?.message?.includes('already exists')) {
+                    console.error('Error saving user:', error);
                 }
             }
             
             return result;
-        } catch (err) {
-            toast.error(err.message.replace('Firebase:', ''));
-            throw err;
+        } catch (error) {
+            console.error('Google Sign In Error:', error);
+            toast.error('Failed to sign in with Google');
+            throw error;
         } finally {
             setLoading(false);
         }
     };
 
-    // Sign out
     const logOut = async () => {
         setLoading(true);
         try {
+            // First clear the cookie from server
+            try {
+                await axiosSecure.post('/logout');
+            } catch (error) {
+                console.warn('Server logout failed:', error.message);
+                // Continue with logout even if server fails
+            }
+
+            // Then sign out from Firebase
             await signOut(auth);
-            // Clear the cookie
-            await axiosSecure.post('/logout');
-        } catch (err) {
-            toast.error(err.message.replace('Firebase:', ''));
-            throw err;
+            
+            // Clear any local storage
+            localStorage.removeItem('accessToken');
+            
+            // Clear user state
+            setUser(null);
+            
+            // Show success message
+            toast.success('Logged out successfully');
+            
+            // Optional: Redirect to home or login page
+            window.location.href = '/';
+            
+        } catch (error) {
+            console.error('Logout error:', error);
+            toast.error('Error during logout. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
-    // Observer for auth state changes
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-            setUser(currentUser);
-            
-            // If we have a user, get a token and set cookie
-            if (currentUser) {
-                try {
-                    await axiosSecure.post('/jwt', {
+            try {
+                setUser(currentUser);
+                if (currentUser?.email) {
+                    const response = await axiosSecure.post('/jwt', {
                         email: currentUser.email
                     });
-                } catch (err) {
-                    console.error('Error setting JWT cookie:', err);
+                    localStorage.setItem('accessToken', response.data.token);
+                } else {
+                    localStorage.removeItem('accessToken');
+                    try {
+                        await axiosSecure.post('/logout');
+                    } catch (error) {
+                        console.warn('Logout failed:', error.message);
+                    }
                 }
-            } else {
-                // Clear the cookie on logout
-                try {
-                    await axiosSecure.post('/logout');
-                } catch (err) {
-                    console.error('Error clearing cookie:', err);
-                }
+            } catch (error) {
+                console.error('Auth state change error:', error);
+                toast.error('Authentication error. Please try logging in again.');
+            } finally {
+                setLoading(false);
             }
-            
-            setLoading(false);
         });
 
         return () => unsubscribe();
     }, []);
 
-    // Create loading component
-    const LoadingSpinner = () => (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600"></div>
-        </div>
-    );
-
-    // Auth values to be provided
     const authInfo = {
         user,
         loading,
@@ -177,14 +217,8 @@ const AuthProvider = ({ children }) => {
         updateUserProfile,
         signIn,
         googleSignIn,
-        logOut,
-        LoadingSpinner
+        logOut
     };
-
-    // Show loading spinner while initial auth state is being determined
-    if (loading && !user) {
-        return <LoadingSpinner />;
-    }
 
     return (
         <AuthContext.Provider value={authInfo}>
@@ -193,7 +227,6 @@ const AuthProvider = ({ children }) => {
     );
 };
 
-// Add prop types validation
 AuthProvider.propTypes = {
     children: PropTypes.node.isRequired
 };

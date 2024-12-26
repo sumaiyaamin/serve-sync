@@ -4,8 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AuthContext } from '../../providers/AuthProvider';
 import { useTheme } from '../../context/ThemeContext';
 import { RiMenu4Line, RiCloseLine } from 'react-icons/ri';
-import { FaHandsHelping, FaChevronDown } from 'react-icons/fa';
-
+import { FaHandsHelping, FaChevronDown, FaSun, FaMoon } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import axiosSecure from '../../api/axiosSecure';
 
@@ -18,12 +17,13 @@ const navLinks = [
 
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext);
-    const { isDarkMode } = useTheme();
+    const { isDarkMode, toggleTheme } = useTheme();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const navigate = useNavigate();
 
+    // Handle scroll effect
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 20);
@@ -32,6 +32,7 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Handle logout
     const handleLogOut = async () => {
         try {
             await logOut();
@@ -99,8 +100,20 @@ const Navbar = () => {
                             )
                         ))}
 
-                        
+                        {/* Theme Toggle Button */}
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            aria-label="Toggle theme"
+                        >
+                            {isDarkMode ? (
+                                <FaSun className="w-5 h-5 text-yellow-400" />
+                            ) : (
+                                <FaMoon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                            )}
+                        </button>
 
+                        {/* User Profile/Auth Buttons */}
                         {user ? (
                             <div className="relative profile-dropdown">
                                 <button
@@ -125,7 +138,6 @@ const Navbar = () => {
                                             exit={{ opacity: 0, y: 10 }}
                                             transition={{ duration: 0.2 }}
                                             className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700"
-                                            role="menu"
                                         >
                                             <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
                                                 <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -135,7 +147,6 @@ const Navbar = () => {
                                                     {user.email}
                                                 </p>
                                             </div>
-
                                             <Link
                                                 to="/add-volunteer-post"
                                                 className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -178,7 +189,19 @@ const Navbar = () => {
 
                     {/* Mobile Menu Button */}
                     <div className="md:hidden flex items-center space-x-4">
-                        
+                        {/* Theme Toggle Button */}
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            aria-label="Toggle theme"
+                        >
+                            {isDarkMode ? (
+                                <FaSun className="w-5 h-5 text-yellow-400" />
+                            ) : (
+                                <FaMoon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                            )}
+                        </button>
+
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -205,20 +228,22 @@ const Navbar = () => {
                     >
                         <div className="px-4 py-3 space-y-3">
                             {navLinks.map((link) => (
-                                <NavLink
-                                    key={link.to}
-                                    to={link.to}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={({ isActive }) => `
-                                        block text-base font-medium
-                                        ${isActive 
-                                            ? 'text-orange-500' 
-                                            : 'text-gray-600 dark:text-gray-300'
-                                        }
-                                    `}
-                                >
-                                    {link.label}
-                                </NavLink>
+                                (!link.private || user) && (
+                                    <NavLink
+                                        key={link.to}
+                                        to={link.to}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={({ isActive }) => `
+                                            block text-base font-medium
+                                            ${isActive 
+                                                ? 'text-orange-500' 
+                                                : 'text-gray-600 dark:text-gray-300'
+                                            }
+                                        `}
+                                    >
+                                        {link.label}
+                                    </NavLink>
+                                )
                             ))}
 
                             {user ? (
@@ -238,20 +263,6 @@ const Navbar = () => {
                                             </p>
                                         </div>
                                     </div>
-                                    <Link
-                                        to="/add-volunteer-post"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="block py-2 text-gray-600 dark:text-gray-300"
-                                    >
-                                        Add Post
-                                    </Link>
-                                    <Link
-                                        to="/manage-my-posts"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="block py-2 text-gray-600 dark:text-gray-300"
-                                    >
-                                        Manage Posts
-                                    </Link>
                                     <button
                                         onClick={() => {
                                             handleLogOut();

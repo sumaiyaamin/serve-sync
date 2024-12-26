@@ -7,6 +7,39 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { FaCalendar, FaMapMarkerAlt, FaUsers, FaImage } from 'react-icons/fa';
+import PropTypes from 'prop-types';
+
+// Create axios instance with interceptors
+const axiosSecure = axios.create({
+    baseURL: 'https://serve-sync-server.vercel.app',
+    withCredentials: true,
+    timeout: 8000
+});
+
+// Add request interceptor to include token
+axiosSecure.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Add response interceptor to handle unauthorized access
+axiosSecure.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
 
 const categories = [
     'Healthcare',
@@ -18,6 +51,22 @@ const categories = [
     'Youth Empowerment',
     'Elderly Care'
 ];
+
+const FormField = ({ label, icon, children }) => (
+    <div className="form-group">
+        <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+            {icon && <span className="mr-2 text-orange-500">{icon}</span>}
+            {label}
+        </label>
+        {children}
+    </div>
+);
+
+FormField.propTypes = {
+    label: PropTypes.string.isRequired,
+    icon: PropTypes.node,
+    children: PropTypes.node.isRequired
+};
 
 const AddVolunteerPost = () => {
     const { user } = useContext(AuthContext);
@@ -40,19 +89,17 @@ const AddVolunteerPost = () => {
             deadline: deadline,
             organizerName: user.displayName,
             organizerEmail: user.email,
-            createdAt: new Date().toISOString(),
+            createdAt: new Date(),
             status: 'active'
         };
 
         try {
-            await axios.post('http://localhost:5000/volunteer-posts', postData, {
-                withCredentials: true
-            });
+            await axiosSecure.post('/volunteer-posts', postData);
             toast.success('Volunteer post created successfully!');
             navigate('/all-volunteer-posts');
         } catch (error) {
             console.error('Error creating post:', error);
-            toast.error('Failed to create post. Please try again.');
+            toast.error(error.response?.data?.message || 'Failed to create post. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -63,7 +110,7 @@ const AddVolunteerPost = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen py-12 px-4 sm:px-6 lg:px-8"
+            className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gray-50"
         >
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
@@ -77,12 +124,7 @@ const AddVolunteerPost = () => {
                     onSubmit={handleSubmit} 
                     className="space-y-8 bg-white p-8 rounded-xl shadow-lg"
                 >
-                    {/* Thumbnail URL */}
-                    <div className="form-group">
-                        <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                            <FaImage className="mr-2 text-orange-500" />
-                            Thumbnail URL
-                        </label>
+                    <FormField label="Thumbnail URL" icon={<FaImage />}>
                         <input
                             type="url"
                             name="thumbnail"
@@ -90,13 +132,9 @@ const AddVolunteerPost = () => {
                             placeholder="Enter image URL"
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
                         />
-                    </div>
+                    </FormField>
 
-                    {/* Title */}
-                    <div className="form-group">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Post Title
-                        </label>
+                    <FormField label="Post Title">
                         <input
                             type="text"
                             name="title"
@@ -104,13 +142,9 @@ const AddVolunteerPost = () => {
                             placeholder="Enter post title"
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
                         />
-                    </div>
+                    </FormField>
 
-                    {/* Description */}
-                    <div className="form-group">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Description
-                        </label>
+                    <FormField label="Description">
                         <textarea
                             name="description"
                             rows={4}
@@ -118,15 +152,10 @@ const AddVolunteerPost = () => {
                             placeholder="Describe the volunteer opportunity"
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
                         />
-                    </div>
+                    </FormField>
 
-                    {/* Two Column Layout */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Category */}
-                        <div className="form-group">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Category
-                            </label>
+                        <FormField label="Category">
                             <select
                                 name="category"
                                 required
@@ -138,14 +167,9 @@ const AddVolunteerPost = () => {
                                     </option>
                                 ))}
                             </select>
-                        </div>
+                        </FormField>
 
-                        {/* Location */}
-                        <div className="form-group">
-                            <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                                <FaMapMarkerAlt className="mr-2 text-orange-500" />
-                                Location
-                            </label>
+                        <FormField label="Location" icon={<FaMapMarkerAlt />}>
                             <input
                                 type="text"
                                 name="location"
@@ -153,14 +177,9 @@ const AddVolunteerPost = () => {
                                 placeholder="Enter location"
                                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
                             />
-                        </div>
+                        </FormField>
 
-                        {/* Volunteers Needed */}
-                        <div className="form-group">
-                            <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                                <FaUsers className="mr-2 text-orange-500" />
-                                Volunteers Needed
-                            </label>
+                        <FormField label="Volunteers Needed" icon={<FaUsers />}>
                             <input
                                 type="number"
                                 name="volunteersNeeded"
@@ -169,50 +188,37 @@ const AddVolunteerPost = () => {
                                 placeholder="Enter number of volunteers"
                                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
                             />
-                        </div>
+                        </FormField>
 
-                        {/* Deadline */}
-                        <div className="form-group">
-                            <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-                                <FaCalendar className="mr-2 text-orange-500" />
-                                Deadline
-                            </label>
+                        <FormField label="Deadline" icon={<FaCalendar />}>
                             <DatePicker
                                 selected={deadline}
                                 onChange={(date) => setDeadline(date)}
                                 minDate={new Date()}
                                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
                             />
-                        </div>
+                        </FormField>
                     </div>
 
-                    {/* Organizer Info */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg">
-                        <div className="form-group">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Organizer Name
-                            </label>
+                        <FormField label="Organizer Name">
                             <input
                                 type="text"
-                                value={user.displayName}
+                                value={user?.displayName || ''}
                                 readOnly
                                 className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-100"
                             />
-                        </div>
-                        <div className="form-group">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                Organizer Email
-                            </label>
+                        </FormField>
+                        <FormField label="Organizer Email">
                             <input
                                 type="email"
-                                value={user.email}
+                                value={user?.email || ''}
                                 readOnly
                                 className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-100"
                             />
-                        </div>
+                        </FormField>
                     </div>
 
-                    {/* Submit Button */}
                     <motion.button
                         type="submit"
                         disabled={loading}

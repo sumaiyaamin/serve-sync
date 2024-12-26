@@ -2,8 +2,87 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import VolunteerNeedCard from './VolunteerNeedCard';
+import PropTypes from 'prop-types';
 import { BsGrid, BsListUl } from 'react-icons/bs';
+import VolunteerCard from '../AllVolunteerPosts/VolunteerCard';
+
+// Create axios instance with interceptors
+const axiosSecure = axios.create({
+    baseURL: 'https://serve-sync-server.vercel.app',
+    withCredentials: true,
+    timeout: 8000
+});
+
+// Add request interceptor to include token
+axiosSecure.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+const TableView = ({ posts }) => (
+    <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="overflow-x-auto bg-white rounded-lg shadow-md"
+    >
+        <table className="min-w-full">
+            <thead>
+                <tr className="bg-gray-50 border-b">
+                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Title</th>
+                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Category</th>
+                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Location</th>
+                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Deadline</th>
+                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Volunteers</th>
+                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Actions</th>
+                </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+                {posts.map((post) => (
+                    <tr key={post._id} className="hover:bg-gray-50 transition-colors duration-200">
+                        <td className="py-4 px-6 text-sm text-gray-800">{post.title}</td>
+                        <td className="py-4 px-6 text-sm text-gray-600">{post.category}</td>
+                        <td className="py-4 px-6 text-sm text-gray-600">{post.location}</td>
+                        <td className="py-4 px-6 text-sm text-gray-600">
+                            {new Date(post.deadline).toLocaleDateString()}
+                        </td>
+                        <td className="py-4 px-6 text-sm text-gray-600">
+                            {post.volunteersNeeded}
+                        </td>
+                        <td className="py-4 px-6">
+                            <Link
+                                to={`/volunteer-posts/${post._id}`}
+                                className="text-orange-500 hover:text-orange-600 font-medium"
+                            >
+                                View Details →
+                            </Link>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </motion.div>
+);
+
+TableView.propTypes = {
+    posts: PropTypes.arrayOf(
+        PropTypes.shape({
+            _id: PropTypes.string.isRequired,
+            title: PropTypes.string.isRequired,
+            category: PropTypes.string.isRequired,
+            location: PropTypes.string.isRequired,
+            deadline: PropTypes.string.isRequired,
+            volunteersNeeded: PropTypes.number.isRequired,
+        })
+    ).isRequired,
+};
 
 const VolunteerNeeds = () => {
     const [volunteerPosts, setVolunteerPosts] = useState([]);
@@ -12,26 +91,25 @@ const VolunteerNeeds = () => {
     const [layout, setLayout] = useState('grid');
 
     useEffect(() => {
-        const fetchVolunteerPosts = async () => {
+        const fetchUpcomingPosts = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/volunteer-posts/upcoming', {
-                    params: {
-                        limit: 6
-                    },
-                    withCredentials: true
+                setLoading(true);
+                // Only need to specify limit as the server handles sorting and filtering
+                const response = await axiosSecure.get('/volunteer-posts/upcoming', {
+                    params: { limit: 6 }
                 });
-                console.log('Fetched posts:', response.data);
                 setVolunteerPosts(response.data);
                 setError(null);
             } catch (error) {
-                console.error('Error fetching volunteer posts:', error);
-                setError('Failed to load volunteer opportunities. Please try again later.');
+                console.error('Error fetching upcoming posts:', error);
+                const errorMessage = error.response?.data?.message || 'Failed to load upcoming opportunities';
+                setError(errorMessage);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchVolunteerPosts();
+        fetchUpcomingPosts();
     }, []);
 
     if (loading) {
@@ -65,16 +143,25 @@ const VolunteerNeeds = () => {
         >
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center mb-12">
-                    <motion.h2 
-                        initial={{ y: -20, opacity: 0 }}
-                        whileInView={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="text-4xl font-bold text-gray-800"
-                    >
-                        Volunteer <span className="text-orange-500">Opportunities</span>
-                    </motion.h2>
+                    <div>
+                        <motion.h2 
+                            initial={{ y: -20, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.5 }}
+                            className="text-4xl font-bold text-gray-800"
+                        >
+                            Active <span className="text-orange-500">Opportunities</span>
+                        </motion.h2>
+                        <motion.p
+                            initial={{ y: 20, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            className="text-gray-600 mt-2"
+                        >
+                            Latest active volunteer opportunities sorted by nearest deadline
+                        </motion.p>
+                    </div>
 
-                    {/* Layout Toggle Icons */}
                     <div className="flex items-center space-x-4">
                         <motion.button
                             whileHover={{ scale: 1.1 }}
@@ -111,13 +198,13 @@ const VolunteerNeeds = () => {
                         animate={{ opacity: 1 }}
                         className="text-center py-12"
                     >
-                        <p className="text-xl text-gray-600">No volunteer opportunities available at the moment.</p>
-                        <p className="text-gray-500 mt-2">Please check back later!</p>
+                        <p className="text-xl text-gray-600">No active volunteer opportunities at the moment.</p>
+                        <p className="text-gray-500 mt-2">Check back soon for new opportunities!</p>
                     </motion.div>
                 ) : layout === 'grid' ? (
                     <motion.div 
-                        initial={{ y: 20, opacity: 0 }}
-                        whileInView={{ y: 0, opacity: 1 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                     >
@@ -125,51 +212,15 @@ const VolunteerNeeds = () => {
                             <motion.div
                                 key={post._id}
                                 initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
                             >
-                                <VolunteerNeedCard post={post} />
+                                <VolunteerCard post={post} />
                             </motion.div>
                         ))}
                     </motion.div>
                 ) : (
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="overflow-x-auto bg-white rounded-lg shadow-md"
-                    >
-                        <table className="min-w-full">
-                            <thead>
-                                <tr className="bg-gray-50 border-b">
-                                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Title</th>
-                                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Category</th>
-                                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Location</th>
-                                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Deadline</th>
-                                    <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                                {volunteerPosts.map((post) => (
-                                    <tr key={post._id} className="hover:bg-gray-50 transition-colors duration-200">
-                                        <td className="py-4 px-6 text-sm text-gray-800">{post.title}</td>
-                                        <td className="py-4 px-6 text-sm text-gray-600">{post.category}</td>
-                                        <td className="py-4 px-6 text-sm text-gray-600">{post.location}</td>
-                                        <td className="py-4 px-6 text-sm text-gray-600">
-                                            {new Date(post.deadline).toLocaleDateString()}
-                                        </td>
-                                        <td className="py-4 px-6">
-                                            <Link
-                                                to={`/volunteer-posts/${post._id}`}
-                                                className="text-orange-500 hover:text-orange-600 font-medium"
-                                            >
-                                                View Details →
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </motion.div>
+                    <TableView posts={volunteerPosts} />
                 )}
 
                 {volunteerPosts.length > 0 && (
