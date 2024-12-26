@@ -1,5 +1,3 @@
-// src/routes/Routes.jsx
-
 import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import Home from '../components/Home/Home';
@@ -9,7 +7,8 @@ import PrivateRoute from './PrivateRoute';
 import VolunteerPostDetails from '../components/VolunteerPostDetails/VolunteerPostDetails';
 import AddVolunteerPost from '../components/AddVolunteerPost/AddVolunteerPost';
 import AllVolunteerPosts from '../components/AllVolunteerPosts/AllVolunteerPosts';
-import ManagePosts from '../components/ManagePosts/ManagePosts'; // Import the ManagePosts component
+import ManagePosts from '../components/ManagePosts/ManagePosts';
+import NotFound from '../components/NotFound/NotFound';
 
 export const router = createBrowserRouter([
     {
@@ -49,13 +48,22 @@ export const router = createBrowserRouter([
                 element: <AllVolunteerPosts />
             },
             {
-                path: "/manage-my-posts", // New route for managing posts
+                path: "/manage-my-posts", 
                 element: (
                     <PrivateRoute>
                         <ManagePosts />
                     </PrivateRoute>
                 )
             },
-        ]
+        ],
+        // Add error element for the main layout
+        errorElement: <NotFound />
+    },
+    // Catch all other routes that don't match
+    {
+        path: "/*",
+        element: <NotFound />
     }
 ]);
+
+export default router;
