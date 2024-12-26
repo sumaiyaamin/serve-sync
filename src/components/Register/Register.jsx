@@ -5,10 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaEye, FaEyeSlash, FaUser, FaEnvelope, FaImage, FaLock } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import axiosSecure from '../../api/axiosSecure';
+import { useTheme } from '../../context/ThemeContext';
 
 const Register = () => {
     const { createUser, updateUserProfile } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { theme } = useTheme();
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
@@ -83,7 +85,12 @@ const Register = () => {
                     createdAt: new Date()
                 });
 
-                toast.success('Welcome to our community! 🎉');
+                toast.success('Welcome to our community! 🎉', {
+                    style: {
+                        background: theme === 'dark' ? '#1e293b' : '#fff',
+                        color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
+                    }
+                });
                 navigate('/', { replace: true });
             } else {
                 throw new Error('No token received');
@@ -91,9 +98,19 @@ const Register = () => {
         } catch (err) {
             setError(err.message);
             if (err.code === 'auth/email-already-in-use') {
-                toast.error('Email already in use');
+                toast.error('Email already in use', {
+                    style: {
+                        background: theme === 'dark' ? '#1e293b' : '#fff',
+                        color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
+                    }
+                });
             } else {
-                toast.error('Registration failed');
+                toast.error('Registration failed', {
+                    style: {
+                        background: theme === 'dark' ? '#1e293b' : '#fff',
+                        color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
+                    }
+                });
             }
         } finally {
             setLoading(false);
@@ -101,27 +118,27 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-dark-900 dark:to-dark-800 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 className="max-w-md w-full space-y-8"
             >
-                <div className="bg-white p-8 rounded-2xl shadow-xl space-y-6">
+                <div className="bg-white dark:bg-dark-card p-8 rounded-2xl shadow-xl dark:shadow-dark space-y-6">
                     <div className="text-center">
                         <motion.h2 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="text-3xl font-bold text-gray-900 mb-2"
+                            className="text-3xl font-bold text-gray-900 dark:text-dark-primary mb-2"
                         >
                             Create Account
                         </motion.h2>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 dark:text-dark-secondary">
                             Already have an account?{' '}
                             <Link
                                 to="/login"
-                                className="font-medium text-orange-500 hover:text-orange-600 transition-colors"
+                                className="font-medium text-primary-500 hover:text-primary-600 transition-colors"
                             >
                                 Sign in
                             </Link>
@@ -134,11 +151,11 @@ const Register = () => {
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
-                                className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md"
+                                className="bg-red-50 dark:bg-red-900/30 border-l-4 border-red-400 p-4 rounded-md"
                             >
                                 <div className="flex">
                                     <div className="ml-3">
-                                        <p className="text-sm text-red-700">{error}</p>
+                                        <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
                                     </div>
                                 </div>
                             </motion.div>
@@ -148,12 +165,12 @@ const Register = () => {
                     <form className="space-y-6" onSubmit={handleRegister}>
                         {/* Name Input */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-dark-primary mb-2">
                                 Full Name
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FaUser className="h-5 w-5 text-gray-400" />
+                                    <FaUser className="h-5 w-5 text-gray-400 dark:text-dark-500" />
                                 </div>
                                 <input
                                     name="name"
@@ -161,7 +178,7 @@ const Register = () => {
                                     value={formData.name}
                                     onChange={handleInputChange}
                                     required
-                                    className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                                    className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-dark-border rounded-lg placeholder-gray-400 dark:placeholder-dark-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
                                     placeholder="Enter your full name"
                                 />
                             </div>
@@ -169,12 +186,12 @@ const Register = () => {
 
                         {/* Email Input */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-dark-primary mb-2">
                                 Email Address
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FaEnvelope className="h-5 w-5 text-gray-400" />
+                                    <FaEnvelope className="h-5 w-5 text-gray-400 dark:text-dark-500" />
                                 </div>
                                 <input
                                     name="email"
@@ -182,7 +199,7 @@ const Register = () => {
                                     value={formData.email}
                                     onChange={handleInputChange}
                                     required
-                                    className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                                    className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-dark-border rounded-lg placeholder-gray-400 dark:placeholder-dark-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
                                     placeholder="Enter your email"
                                 />
                             </div>
@@ -190,12 +207,12 @@ const Register = () => {
 
                         {/* Photo URL Input */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-dark-primary mb-2">
                                 Photo URL
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FaImage className="h-5 w-5 text-gray-400" />
+                                    <FaImage className="h-5 w-5 text-gray-400 dark:text-dark-500" />
                                 </div>
                                 <input
                                     name="photo"
@@ -203,7 +220,7 @@ const Register = () => {
                                     value={formData.photo}
                                     onChange={handleInputChange}
                                     required
-                                    className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                                    className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-dark-border rounded-lg placeholder-gray-400 dark:placeholder-dark-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
                                     placeholder="Enter photo URL"
                                 />
                             </div>
@@ -211,12 +228,12 @@ const Register = () => {
 
                         {/* Password Input */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-dark-primary mb-2">
                                 Password
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FaLock className="h-5 w-5 text-gray-400" />
+                                    <FaLock className="h-5 w-5 text-gray-400 dark:text-dark-500" />
                                 </div>
                                 <input
                                     name="password"
@@ -224,7 +241,7 @@ const Register = () => {
                                     value={formData.password}
                                     onChange={handleInputChange}
                                     required
-                                    className="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                                    className="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-dark-border rounded-lg placeholder-gray-400 dark:placeholder-dark-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
                                     placeholder="Create a password"
                                 />
                                 <button
@@ -233,9 +250,9 @@ const Register = () => {
                                     className="absolute inset-y-0 right-0 pr-3 flex items-center"
                                 >
                                     {showPassword ? (
-                                        <FaEyeSlash className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                        <FaEyeSlash className="h-5 w-5 text-gray-400 dark:text-dark-500 hover:text-gray-600 dark:hover:text-dark-400" />
                                     ) : (
-                                        <FaEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                        <FaEye className="h-5 w-5 text-gray-400 dark:text-dark-500 hover:text-gray-600 dark:hover:text-dark-400" />
                                     )}
                                 </button>
                             </div>
@@ -248,7 +265,7 @@ const Register = () => {
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
                                     exit={{ opacity: 0, height: 0 }}
-                                    className="text-sm text-red-600 bg-red-50 p-3 rounded-lg whitespace-pre-line"
+                                    className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 p-3 rounded-lg whitespace-pre-line"
                                 >
                                     {passwordError}
                                 </motion.div>
@@ -261,7 +278,7 @@ const Register = () => {
                             whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={loading || passwordError}
-                            className={`w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 ${
+                            className={`w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm dark:shadow-dark text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200 ${
                                 (loading || passwordError) ? 'opacity-50 cursor-not-allowed' : ''
                             }`}
                         >

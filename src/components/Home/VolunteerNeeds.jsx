@@ -1,31 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import axios from 'axios';
-import PropTypes from 'prop-types';
 import { BsGrid, BsListUl } from 'react-icons/bs';
+import axiosSecure from '../../api/axiosSecure';
 import VolunteerCard from '../AllVolunteerPosts/VolunteerCard';
-
-// Create axios instance with interceptors
-const axiosSecure = axios.create({
-    baseURL: 'https://serve-sync-server.vercel.app',
-    withCredentials: true,
-    timeout: 8000
-});
-
-// Add request interceptor to include token
-axiosSecure.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+import PropTypes from 'prop-types';
 
 const TableView = ({ posts }) => (
     <motion.div 
@@ -94,16 +73,12 @@ const VolunteerNeeds = () => {
         const fetchUpcomingPosts = async () => {
             try {
                 setLoading(true);
-                // Only need to specify limit as the server handles sorting and filtering
-                const response = await axiosSecure.get('/volunteer-posts/upcoming', {
-                    params: { limit: 6 }
-                });
+                const response = await axiosSecure.get('/volunteer-posts/upcoming');
                 setVolunteerPosts(response.data);
                 setError(null);
             } catch (error) {
                 console.error('Error fetching upcoming posts:', error);
-                const errorMessage = error.response?.data?.message || 'Failed to load upcoming opportunities';
-                setError(errorMessage);
+                setError('Failed to load upcoming opportunities');
             } finally {
                 setLoading(false);
             }

@@ -20,6 +20,7 @@ import {
     FaUserEdit
 } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import { useTheme } from '../../context/ThemeContext';
 
 // Create axios instance with interceptors
 const axiosSecure = axios.create({
@@ -74,6 +75,7 @@ const ManagePosts = () => {
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectedPost, setSelectedPost] = useState(null);
     const [activeTab, setActiveTab] = useState('posts');
+    const { theme } = useTheme();
 
     const [updateFormData, setUpdateFormData] = useState({
         thumbnail: '',
@@ -125,7 +127,8 @@ const ManagePosts = () => {
             confirmButtonColor: '#f97316',
             cancelButtonColor: '#6b7280',
             confirmButtonText: 'Yes, delete it!',
-            background: '#ffffff',
+            background: theme === 'dark' ? '#1e293b' : '#ffffff',
+            color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
             borderRadius: '12px',
         });
 
@@ -150,7 +153,8 @@ const ManagePosts = () => {
             confirmButtonColor: '#f97316',
             cancelButtonColor: '#6b7280',
             confirmButtonText: 'Yes, cancel it!',
-            background: '#ffffff',
+            background: theme === 'dark' ? '#1e293b' : '#ffffff',
+            color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
             borderRadius: '12px',
         });
 
@@ -198,8 +202,8 @@ const ManagePosts = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+            <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-dark-900">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
             </div>
         );
     }
@@ -208,18 +212,18 @@ const ManagePosts = () => {
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gray-50"
+            className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-dark-900 transition-colors duration-300"
         >
             <div className="max-w-7xl mx-auto">
                 {/* Tab Navigation */}
                 <div className="flex justify-center mb-8">
-                    <div className="bg-white rounded-lg shadow-sm p-1">
+                    <div className="bg-white dark:bg-dark-800 rounded-lg shadow-sm dark:shadow-dark p-1">
                         <button
                             onClick={() => setActiveTab('posts')}
                             className={`px-6 py-2 rounded-lg transition-all duration-200 ${
                                 activeTab === 'posts'
-                                    ? 'bg-orange-500 text-white'
-                                    : 'text-gray-600 hover:bg-gray-100'
+                                    ? 'bg-primary-500 text-white'
+                                    : 'text-gray-600 dark:text-dark-secondary hover:bg-gray-100 dark:hover:bg-dark-700'
                             }`}
                         >
                             My Posts
@@ -228,8 +232,8 @@ const ManagePosts = () => {
                             onClick={() => setActiveTab('requests')}
                             className={`px-6 py-2 rounded-lg transition-all duration-200 ${
                                 activeTab === 'requests'
-                                    ? 'bg-orange-500 text-white'
-                                    : 'text-gray-600 hover:bg-gray-100'
+                                    ? 'bg-primary-500 text-white'
+                                    : 'text-gray-600 dark:text-dark-secondary hover:bg-gray-100 dark:hover:bg-dark-700'
                             }`}
                         >
                             My Requests
@@ -275,20 +279,20 @@ const PostsTab = ({ myPosts, handleUpdate, handleDelete, navigate }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="bg-white rounded-xl shadow-lg p-6"
+        className="bg-white dark:bg-dark-card rounded-xl shadow-lg dark:shadow-dark p-6"
     >
         <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">
-                My <span className="text-orange-500">Posts</span>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-dark-primary">
+                My <span className="text-primary-500">Posts</span>
             </h2>
-            <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium">
+            <span className="bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-300 px-4 py-2 rounded-full text-sm font-medium">
                 Total Posts: {myPosts.length}
             </span>
         </div>
 
         {myPosts.length === 0 ? (
             <EmptyState 
-                icon={<FaListAlt className="mx-auto text-4xl text-gray-400 mb-4" />}
+                icon={<FaListAlt className="mx-auto text-4xl text-gray-400 dark:text-dark-500 mb-4" />}
                 message="You have not created any posts yet"
                 buttonText="Create Your First Post"
                 onClick={() => navigate('/add-volunteer-post')}
@@ -309,20 +313,20 @@ const RequestsTab = ({ myRequests, handleCancelRequest, navigate }) => (
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="bg-white rounded-xl shadow-lg p-6"
+        className="bg-white dark:bg-dark-card rounded-xl shadow-lg dark:shadow-dark p-6"
     >
         <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">
-                My <span className="text-orange-500">Requests</span>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-dark-primary">
+                My <span className="text-primary-500">Requests</span>
             </h2>
-            <span className="bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium">
+            <span className="bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-300 px-4 py-2 rounded-full text-sm font-medium">
                 Total Requests: {myRequests.length}
             </span>
         </div>
 
         {myRequests.length === 0 ? (
             <EmptyState 
-                icon={<FaUsers className="mx-auto text-4xl text-gray-400 mb-4" />}
+                icon={<FaUsers className="mx-auto text-4xl text-gray-400 dark:text-dark-500 mb-4" />}
                 message="You have not made any volunteer requests yet"
                 buttonText="Browse Opportunities"
                 onClick={() => navigate('/all-volunteer-posts')}
@@ -339,10 +343,10 @@ const RequestsTab = ({ myRequests, handleCancelRequest, navigate }) => (
 const EmptyState = ({ icon, message, buttonText, onClick }) => (
     <div className="text-center py-12">
         {icon}
-        <p className="text-gray-600 mb-4">{message}</p>
+        <p className="text-gray-600 dark:text-dark-secondary mb-4">{message}</p>
         <button
             onClick={onClick}
-            className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200"
+            className="px-6 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors duration-200"
         >
             {buttonText}
         </button>
@@ -538,37 +542,37 @@ const FormField = ({
 // Add PostsTable component that was used but not defined
 const PostsTable = ({ posts, handleUpdate, handleDelete }) => (
     <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-dark-border">
             <thead>
-                <tr className="bg-gray-50">
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deadline</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <tr className="bg-gray-50 dark:bg-dark-800">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-secondary uppercase tracking-wider">Title</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-secondary uppercase tracking-wider">Category</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-secondary uppercase tracking-wider">Deadline</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-secondary uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-dark-border">
                 {posts.map((post) => (
-                    <tr key={post._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">{post.title}</td>
+                    <tr key={post._id} className="hover:bg-gray-50 dark:hover:bg-dark-800 transition-colors duration-200">
+                        <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-dark-primary">{post.title}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">
+                            <span className="px-3 py-1 bg-primary-100 text-primary-800 dark:bg-primary-900/30 dark:text-primary-300 rounded-full text-sm">
                                 {post.category}
                             </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-dark-secondary">
                             {new Date(post.deadline).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap space-x-2">
                             <button
                                 onClick={() => handleUpdate(post)}
-                                className="p-2 text-blue-600 hover:text-blue-800"
+                                className="p-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                             >
                                 <FaEdit size={18} />
                             </button>
                             <button
                                 onClick={() => handleDelete(post._id)}
-                                className="p-2 text-red-600 hover:text-red-800"
+                                className="p-2 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
                             >
                                 <FaTrash size={18} />
                             </button>
@@ -583,35 +587,37 @@ const PostsTable = ({ posts, handleUpdate, handleDelete }) => (
 // Add RequestsTable component that was used but not defined
 const RequestsTable = ({ requests, handleCancelRequest }) => (
     <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-dark-border">
             <thead>
-                <tr className="bg-gray-50">
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Post Title</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <tr className="bg-gray-50 dark:bg-dark-800">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-secondary uppercase tracking-wider">Post Title</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-secondary uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-secondary uppercase tracking-wider">Applied Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-dark-secondary uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-dark-card divide-y divide-gray-200 dark:divide-dark-border">
                 {requests.map((request) => (
-                    <tr key={request._id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">{request.postTitle}</td>
+                    <tr key={request._id} className="hover:bg-gray-50 dark:hover:bg-dark-800 transition-colors duration-200">
+                        <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-dark-primary">{request.postTitle}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`px-3 py-1 rounded-full text-sm ${
-                                request.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
-                                request.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                                'bg-red-100 text-red-800'
+                                request.status === 'requested' 
+                                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' 
+                                    : request.status === 'accepted' 
+                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
                             }`}>
                                 {request.status}
                             </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-dark-secondary">
                             {new Date(request.appliedAt).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                             <button
                                 onClick={() => handleCancelRequest(request._id)}
-                                className="p-2 text-red-600 hover:text-red-800"
+                                className="p-2 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
                             >
                                 <FaTrash size={18} />
                             </button>

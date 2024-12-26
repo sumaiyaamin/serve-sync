@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { FaCalendar, FaMapMarkerAlt, FaUsers, FaImage } from 'react-icons/fa';
 import PropTypes from 'prop-types';
+import { useTheme } from '../../context/ThemeContext';
 
 // Create axios instance with interceptors
 const axiosSecure = axios.create({
@@ -54,8 +55,8 @@ const categories = [
 
 const FormField = ({ label, icon, children }) => (
     <div className="form-group">
-        <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
-            {icon && <span className="mr-2 text-orange-500">{icon}</span>}
+        <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-dark-primary mb-2">
+            {icon && <span className="mr-2 text-primary-500">{icon}</span>}
             {label}
         </label>
         {children}
@@ -73,6 +74,7 @@ const AddVolunteerPost = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [deadline, setDeadline] = useState(new Date());
+    const { theme } = useTheme();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -110,19 +112,19 @@ const AddVolunteerPost = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gray-50"
+            className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-dark-900 transition-colors duration-300"
         >
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                        Create a Volunteer <span className="text-orange-500">Opportunity</span>
+                    <h1 className="text-4xl font-bold text-gray-900 dark:text-dark-primary mb-4">
+                        Create a Volunteer <span className="text-primary-500">Opportunity</span>
                     </h1>
-                    <p className="text-gray-600">Fill in the details below to create a new volunteer opportunity</p>
+                    <p className="text-gray-600 dark:text-dark-secondary">Fill in the details below to create a new volunteer opportunity</p>
                 </div>
 
                 <motion.form 
                     onSubmit={handleSubmit} 
-                    className="space-y-8 bg-white p-8 rounded-xl shadow-lg"
+                    className="space-y-8 bg-light-card dark:bg-dark-card p-8 rounded-xl shadow-md dark:shadow-dark"
                 >
                     <FormField label="Thumbnail URL" icon={<FaImage />}>
                         <input
@@ -130,7 +132,7 @@ const AddVolunteerPost = () => {
                             name="thumbnail"
                             required
                             placeholder="Enter image URL"
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-border dark:bg-dark-800 dark:text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent transition duration-200"
                         />
                     </FormField>
 
@@ -140,7 +142,7 @@ const AddVolunteerPost = () => {
                             name="title"
                             required
                             placeholder="Enter post title"
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-border dark:bg-dark-800 dark:text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent transition duration-200"
                         />
                     </FormField>
 
@@ -150,7 +152,7 @@ const AddVolunteerPost = () => {
                             rows={4}
                             required
                             placeholder="Describe the volunteer opportunity"
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-border dark:bg-dark-800 dark:text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent transition duration-200"
                         />
                     </FormField>
 
@@ -159,7 +161,7 @@ const AddVolunteerPost = () => {
                             <select
                                 name="category"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-border dark:bg-dark-800 dark:text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent transition duration-200"
                             >
                                 {categories.map((category) => (
                                     <option key={category} value={category}>
@@ -175,7 +177,7 @@ const AddVolunteerPost = () => {
                                 name="location"
                                 required
                                 placeholder="Enter location"
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-border dark:bg-dark-800 dark:text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent transition duration-200"
                             />
                         </FormField>
 
@@ -186,7 +188,7 @@ const AddVolunteerPost = () => {
                                 min="1"
                                 required
                                 placeholder="Enter number of volunteers"
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-border dark:bg-dark-800 dark:text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent transition duration-200"
                             />
                         </FormField>
 
@@ -195,18 +197,18 @@ const AddVolunteerPost = () => {
                                 selected={deadline}
                                 onChange={(date) => setDeadline(date)}
                                 minDate={new Date()}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-dark-border dark:bg-dark-800 dark:text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-transparent transition duration-200"
                             />
                         </FormField>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 dark:bg-dark-800 p-4 rounded-lg">
                         <FormField label="Organizer Name">
                             <input
                                 type="text"
                                 value={user?.displayName || ''}
                                 readOnly
-                                className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-100"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-dark-border bg-gray-100 dark:bg-dark-700 dark:text-dark-secondary"
                             />
                         </FormField>
                         <FormField label="Organizer Email">
@@ -214,7 +216,7 @@ const AddVolunteerPost = () => {
                                 type="email"
                                 value={user?.email || ''}
                                 readOnly
-                                className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-100"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-dark-border bg-gray-100 dark:bg-dark-700 dark:text-dark-secondary"
                             />
                         </FormField>
                     </div>
@@ -224,7 +226,7 @@ const AddVolunteerPost = () => {
                         disabled={loading}
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.99 }}
-                        className={`w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-200 ${
+                        className={`w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-200 ${
                             loading ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                     >
