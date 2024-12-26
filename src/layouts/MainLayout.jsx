@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar/Navbar';
 import { motion } from 'framer-motion';
+import Footer from '../components/Footer/Footer';
 
 const MainLayout = () => {
     return (
@@ -20,9 +21,9 @@ const MainLayout = () => {
                 </div>
             </motion.main>
 
-            {/* Footer space if needed */}
+          
             <div className="h-16">
-                {/* Footer content */}
+                <Footer />
             </div>
         </div>
     );
