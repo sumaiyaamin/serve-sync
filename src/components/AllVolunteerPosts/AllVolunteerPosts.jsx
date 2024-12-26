@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axiosSecure from '../../api/axiosSecure';
 import { motion } from 'framer-motion';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { FaSearch, FaMapMarkerAlt, FaClock, FaTag } from 'react-icons/fa';
@@ -15,7 +15,7 @@ const VolunteerCard = ({ post }) => {
             whileHover={{ y: -5 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
         >
             <div className="relative">
                 <img 
@@ -28,19 +28,19 @@ const VolunteerCard = ({ post }) => {
                 </span>
             </div>
             <div className="p-6">
-                <h3 className="text-xl font-semibold mb-4 text-gray-800 hover:text-orange-500 transition-colors duration-200">
+                <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white hover:text-orange-500 transition-colors duration-200">
                     {title}
                 </h3>
                 <div className="space-y-3">
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center text-gray-600 dark:text-gray-300">
                         <FaMapMarkerAlt className="text-orange-500 mr-2" />
                         <span>{location}</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center text-gray-600 dark:text-gray-300">
                         <FaClock className="text-orange-500 mr-2" />
                         <span>Deadline: {new Date(deadline).toLocaleDateString()}</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
+                    <div className="flex items-center text-gray-600 dark:text-gray-300">
                         <FaTag className="text-orange-500 mr-2" />
                         <span>{category}</span>
                     </div>
@@ -67,7 +67,6 @@ VolunteerCard.propTypes = {
     }).isRequired,
 };
 
-// Main Component
 const AllVolunteerPosts = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -83,7 +82,7 @@ const AllVolunteerPosts = () => {
         
         setSearchLoading(true);
         try {
-            const response = await axios.get(`http://localhost:5000/volunteer-posts/search?title=${term}`);
+            const response = await axiosSecure.get(`/volunteer-posts/search?title=${term}`);
             setPosts(response.data);
         } catch (error) {
             console.error('Error searching posts:', error);
@@ -95,9 +94,7 @@ const AllVolunteerPosts = () => {
     // Fetch all posts
     const fetchAllPosts = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/volunteer-posts', {
-                withCredentials: true
-            });
+            const response = await axiosSecure.get('/volunteer-posts');
             setPosts(response.data);
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -133,7 +130,7 @@ const AllVolunteerPosts = () => {
                     animate={{ y: 0, opacity: 1 }}
                     className="text-center mb-12"
                 >
-                    <h1 className="text-4xl font-bold text-gray-900 mb-6">
+                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
                         Volunteer <span className="text-orange-500">Opportunities</span>
                     </h1>
                     
@@ -146,7 +143,7 @@ const AllVolunteerPosts = () => {
                                 placeholder="Search volunteer opportunities..."
                                 value={searchTerm}
                                 onChange={handleSearchChange}
-                                className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent shadow-sm transition duration-200"
+                                className="w-full pl-10 pr-12 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent shadow-sm transition duration-200"
                             />
                             {searchLoading && (
                                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -163,8 +160,8 @@ const AllVolunteerPosts = () => {
                         animate={{ opacity: 1 }}
                         className="text-center py-12"
                     >
-                        <p className="text-xl text-gray-600">No volunteer opportunities found</p>
-                        <p className="text-gray-500 mt-2">Try adjusting your search terms</p>
+                        <p className="text-xl text-gray-600 dark:text-gray-300">No volunteer opportunities found</p>
+                        <p className="text-gray-500 dark:text-gray-400 mt-2">Try adjusting your search terms</p>
                     </motion.div>
                 ) : (
                     <motion.div 

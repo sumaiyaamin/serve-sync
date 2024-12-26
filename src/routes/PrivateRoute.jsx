@@ -2,78 +2,64 @@ import { useContext, useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../providers/AuthProvider';
 import PropTypes from 'prop-types';
-import axiosSecure from '.././api/axiosSecure';
-import { motion } from 'framer-motion';
+import axiosSecure from '../api/axiosSecure';
 
 const PrivateRoute = ({ children }) => {
-    const { user, loading } = useContext(AuthContext);
-    const location = useLocation();
+    const { user, loading, logOut } = useContext(AuthContext);
     const [tokenVerified, setTokenVerified] = useState(false);
     const [verifying, setVerifying] = useState(true);
+    const location = useLocation();
 
     useEffect(() => {
         const verifyToken = async () => {
-            try {
-                const token = localStorage.getItem('accessToken');
-                if (token && user) {
+            if (user) {
+                try {
                     // Verify token with backend
-                    await axiosSecure.post('/verify-token');
-                    setTokenVerified(true);
-                } else {
-                    setTokenVerified(false);
+                    const response = await axiosSecure.get('/verify-token');
+                    setTokenVerified(response.data.valid);
+                } catch (error) {
+                    console.error('Token verification failed:', error);
+                    // If token is invalid, log out the user
+                    if (error.response?.status === 401 || error.response?.status === 403) {
+                        await logOut();
+                        setTokenVerified(false);
+                    }
                 }
-            } catch (error) {
-                console.error('Token verification failed:', error);
-                localStorage.removeItem('accessToken');
-                setTokenVerified(false);
-            } finally {
-                setVerifying(false);
             }
+            setVerifying(false);
         };
 
         verifyToken();
-    }, [user]);
+    }, [user, logOut]);
 
     if (loading || verifying) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full"
-                />
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="mt-4 text-gray-600"
-                >
-                    {loading ? 'Loading...' : 'Verifying access...'}
-                </motion.p>
+            <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900">
+                <div className="relative">
+                    {/* Main spinner */}
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-orange-500"></div>
+                    {/* Inner spinner */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div className="animate-ping h-4 w-4 rounded-full bg-orange-500 opacity-75"></div>
+                    </div>
+                </div>
+                <p className="ml-4 text-lg font-medium text-gray-700 dark:text-gray-300">
+                    Verifying access...
+                </p>
             </div>
         );
     }
 
     if (!user || !tokenVerified) {
-        // Store the location they tried to visit
-        return (
-            <Navigate 
-                to="/login" 
-                state={{ from: location }} 
-                replace 
-            />
-        );
+        // Store the attempted location for redirect after login
+        return <Navigate 
+            to="/login" 
+            state={{ from: location }} 
+            replace 
+        />;
     }
 
-    return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-        >
-            {children}
-        </motion.div>
-    );
+    return children;
 };
 
 PrivateRoute.propTypes = {
