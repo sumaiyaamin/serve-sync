@@ -113,7 +113,7 @@ PUT /api/applications/🆔
 
 1. Clone the repository
 bash
-git clone https://github.com/programming-hero-web-course2/b10a11-client-side-sumaiyaamin.git
+git clone https://github.com/sumaiyaamin/serve-sync.git
 cd serve-sync
 2. Install dependencies
 bash
@@ -173,13 +173,10 @@ The application is deployed using Firebase Hosting for the frontend and Vercel f
 4. Push to the branch (git push origin feature/AmazingFeature)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👥 Support
 
-For support, please email support@servesync.com or join our Discord community.
+For support, please email sumaiya.prova321@gmail.com
 
 ---
 
