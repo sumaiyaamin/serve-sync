@@ -110,36 +110,51 @@ PUT /api/applications/🆔
 - Firebase Hosting
 
 ## 📦 Installation & Setup
+# Serve Sync 🚀
 
-1. Clone the repository
-bash
+## 📥 Clone the Repository  
+```bash
 git clone https://github.com/sumaiyaamin/serve-sync.git
 cd serve-sync
-2. Install dependencies
-bash
-Install frontend dependencies
+````
+📦 Install Dependencies
+Frontend Dependencies
+```bash
 cd client
 npm install
+````
 Install backend dependencies
+```bash
 cd ../server
 npm install
-3. Environment Setup
-bash
+```
+⚙️ Environment Setup
 Frontend (.env)
+```bash
+
 VITE_API_URL=your_api_url
 VITE_FIREBASE_CONFIG=your_firebase_config
+
+```
 Backend (.env)
+```bash
 MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
-4. Start Development Servers
+```
+ Start Development Servers
 bash
 Frontend
+```
 cd client
 npm run dev
+```
 Backend
+```
 cd server
 npm run dev
+```
 ## 🌐 Project Structure
+```
 serve-sync/
 ├── client/
 │ ├── src/
@@ -158,6 +173,7 @@ serve-sync/
 ├── models/
 ├── controllers/
 └── middleware/
+```
 ## 🚀 Deployment
 
 The application is deployed using Firebase Hosting for the frontend and Vercel for the backend.
