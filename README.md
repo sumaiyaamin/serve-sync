@@ -39,14 +39,15 @@ Serve Sync is a comprehensive volunteer management platform that connects organi
 ### Frontend Components
 
 #### Navigation & Layout
-jsx
+````jsx
 // Navbar.jsx
 Responsive navigation with mobile menu
 Dark/Light theme toggle
 User authentication status
 Dynamic navigation links
+````
 #### Volunteer Posts
-jsx
+````jsx
 // VolunteerCard.jsx
 Display volunteer opportunity details
 Status indicators
@@ -56,8 +57,9 @@ Responsive design
 Grid/List view toggle
 Search functionality
 Filtering options
+````
 #### Post Management
-jsx
+````jsx
 // AddVolunteerPost.jsx
 Form validation
 Image upload
@@ -68,17 +70,19 @@ CRUD operations
 Status updates
 Application tracking
 Volunteer management
+````
 ### Backend Implementation
 
 #### Server Setup
-javascript
+````javascript
 // index.js
 Express server configuration
 MongoDB connection
 Authentication middleware
 Route handlers
+````
 #### API Endpoints
-javascript
+```javascript
 // Volunteer Posts
 GET /api/volunteer-posts
 POST /api/volunteer-posts
@@ -92,6 +96,7 @@ POST /api/auth/logout
 POST /api/applications
 GET /api/applications/user
 PUT /api/applications/🆔
+````
 ## 🔧 Technology Stack
 
 ### Frontend
