@@ -21,9 +21,9 @@ const Footer = () => {
         {
             title: "Connect",
             links: [
-                { name: "GitHub", url: "https://github.com/sumaiyaprova" },
-                { name: "LinkedIn", url: "https://linkedin.com/in/sumaiyaprova" },
-                { name: "Email", url: "mailto:sumaiyaprova@gmail.com" },
+                { name: "GitHub", url: "https://github.com/sumaiyaamin" },
+                { name: "LinkedIn", url: "https://www.linkedin.com/in/sumaiya-amin-prova01/" },
+                { name: "Email", url: "mailto:sumaiya.prova321@gmail.com" },
             ]
         }
     ];
