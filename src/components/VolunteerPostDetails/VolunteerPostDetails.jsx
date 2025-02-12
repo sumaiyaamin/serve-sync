@@ -339,12 +339,12 @@ const VolunteerPostDetails = () => {
             animate="animate"
             exit="exit"
             variants={pageVariants}
-            className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gray-50"
+            className="min-h-screen py-12 px-4 sm:px-6 lg:px-8  bg-gray-50 dark:bg-gray-900"
         >
             <div className="max-w-4xl mx-auto">
                 {/* Post Content */}
                 <motion.div 
-                    className="bg-white rounded-2xl shadow-lg overflow-hidden"
+                    className=" bg-gray-50 dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden"
                     whileHover={{ boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)" }}
                 >
                     {/* Post Header */}
@@ -368,11 +368,12 @@ const VolunteerPostDetails = () => {
 
                     <div className="p-8">
                         {/* Info Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                            <InfoCard
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8  ">
+                            <InfoCard 
                                 icon={<FaTags className="text-2xl text-orange-500" />}
                                 label="Category"
-                                value={post.category}
+                                value={post.category } 
+                                
                             />
                             <InfoCard
                                 icon={<FaUsers className="text-2xl text-orange-500" />}
@@ -387,27 +388,27 @@ const VolunteerPostDetails = () => {
                         </div>
 
                         {/* Description */}
-                        <div className="mb-8">
+                        <div className="mb-8 ">
                             <h2 className="text-2xl font-bold mb-4">About This Opportunity</h2>
                             <p className="text-gray-700 leading-relaxed">{post.description}</p>
                         </div>
 
                         {/* Organizer Info */}
-                        <div className="bg-gray-50 p-6 rounded-lg mb-8">
-                            <h3 className="text-lg font-semibold mb-4">Organizer Information</h3>
+                        <div className=" bg-gray-50 dark:bg-gray-900 p-6 rounded-lg mb-8">
+                            <h3 className="text-lg dark:text-white font-semibold mb-4">Organizer Information</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="flex items-center space-x-3">
                                     <FaUser className="text-orange-500" />
                                     <div>
-                                        <p className="text-sm text-gray-500">Name</p>
-                                        <p className="font-medium">{post.organizerName}</p>
+                                        <p className="text-sm text-gray-500 dark:text-white">Name</p>
+                                        <p className="font-medium dark:text-gray-100">{post.organizerName}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     <FaEnvelope className="text-orange-500" />
                                     <div>
-                                        <p className="text-sm text-gray-500">Email</p>
-                                        <p className="font-medium">{post.organizerEmail}</p>
+                                        <p className="text-sm text-gray-500 dark:text-white">Email</p>
+                                        <p className="font-medium dark:text-gray-100">{post.organizerEmail}</p>
                                     </div>
                                 </div>
                             </div>
@@ -448,7 +449,7 @@ const VolunteerPostDetails = () => {
 };
 
 const InfoCard = ({ icon, label, value }) => (
-    <div className="flex items-center space-x-3 bg-orange-50 p-4 rounded-lg">
+    <div className="flex items-center space-x-3 bg-orange-50 dark:bg-gray-900 p-4 rounded-lg">
         {icon}
         <div>
             <p className="text-sm text-gray-500">{label}</p>

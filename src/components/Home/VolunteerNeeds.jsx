@@ -123,7 +123,7 @@ const VolunteerNeeds = () => {
                             initial={{ y: -20, opacity: 0 }}
                             whileInView={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.5 }}
-                            className="text-4xl font-bold text-gray-800"
+                            className="text-4xl font-bold text-gray-800 dark:text-gray-50"
                         >
                             Active <span className="text-orange-500">Opportunities</span>
                         </motion.h2>
@@ -131,7 +131,7 @@ const VolunteerNeeds = () => {
                             initial={{ y: 20, opacity: 0 }}
                             whileInView={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
-                            className="text-gray-600 mt-2"
+                            className="text-gray-600 dark:text-gray-200 mt-2"
                         >
                             Latest active volunteer opportunities sorted by nearest deadline
                         </motion.p>
