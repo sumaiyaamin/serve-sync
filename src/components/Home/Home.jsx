@@ -40,7 +40,8 @@ const Home = () => {
             title: "Make a Difference Today",
             description: "Join our community of volunteers and help create positive change in the world.",
             image: "https://i.ibb.co.com/bLNM80t/Youth-Volunteering-JK-Orthodontics.jpg",
-            cta: "Get Started"
+            cta: "Get Started",
+            route : '/all-volunteer-posts'
         },
         {
             title: "Support Local Communities",
@@ -57,7 +58,7 @@ const Home = () => {
     ];
 
     return (
-        <div className="min-h-screen overflow-x-hidden">
+        <div className="min-h-screen overflow-x-hidden bg-gray-50 dark:bg-gray-900">
             {/* Hero Slider Section */}
             <section className="relative h-[90vh]">
                 <Slider {...sliderSettings} className="h-full">
@@ -135,12 +136,12 @@ const Home = () => {
             </motion.section>
 
             {/* Success Stories Section */}
-            <section className="py-20 bg-gray-50">
+            <section className="py-20 bg-gray-50 dark:bg-gray-900">
                 <div className="container mx-auto px-4">
                     <motion.h2
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
-                        className="text-4xl font-bold text-center text-gray-800 mb-12"
+                        className="text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-12"
                     >
                         Success Stories
                     </motion.h2>
@@ -168,14 +169,14 @@ const Home = () => {
                             <motion.div
                                 key={index}
                                 whileHover={{ y: -10 }}
-                                className="bg-white rounded-lg shadow-lg overflow-hidden"
+                                className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden"
                             >
                                 <div className="p-6">
                                     <div className="mb-4">{story.icon}</div>
-                                    <h3 className="text-xl font-semibold mb-4 text-gray-800">
+                                    <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
                                         {story.title}
                                     </h3>
-                                    <p className="text-gray-600">{story.description}</p>
+                                    <p className="text-gray-600 dark:text-gray-50">{story.description}</p>
                                 </div>
                             </motion.div>
                         ))}
