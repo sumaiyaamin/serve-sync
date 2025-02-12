@@ -10,11 +10,11 @@ const TableView = ({ posts }) => (
     <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="overflow-x-auto bg-white rounded-lg shadow-md"
+        className="overflow-x-auto bg-white dark:bg-gray-900 rounded-lg shadow-md"
     >
         <table className="min-w-full">
             <thead>
-                <tr className="bg-gray-50 border-b">
+                <tr className="bg-gray-50 dark:bg-gray-400 border-b">
                     <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Title</th>
                     <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Category</th>
                     <th className="py-4 px-6 text-left text-sm font-semibold text-gray-700">Location</th>
@@ -25,9 +25,9 @@ const TableView = ({ posts }) => (
             </thead>
             <tbody className="divide-y divide-gray-200">
                 {posts.map((post) => (
-                    <tr key={post._id} className="hover:bg-gray-50 transition-colors duration-200">
-                        <td className="py-4 px-6 text-sm text-gray-800">{post.title}</td>
-                        <td className="py-4 px-6 text-sm text-gray-600">{post.category}</td>
+                    <tr key={post._id} className="hover:bg-gray-100 transition-colors duration-200">
+                        <td className="py-4 px-6 text-sm text-gray-800 dark:text-gray-600">{post.title}</td>
+                        <td className="py-4 px-6 text-sm text-gray-800 dark:text-gray-600">{post.category}</td>
                         <td className="py-4 px-6 text-sm text-gray-600">{post.location}</td>
                         <td className="py-4 px-6 text-sm text-gray-600">
                             {new Date(post.deadline).toLocaleDateString()}
@@ -114,7 +114,7 @@ const VolunteerNeeds = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="py-16 bg-gray-50"
+            className="py-16 bg-gray-50 dark:bg-gray-900"
         >
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center mb-12">

@@ -16,7 +16,7 @@ const MainLayout = () => {
                 transition={{ duration: 0.5 }}
                 className="flex-grow " 
             >
-                <div className="max-w-7xl mx-auto pt-10 ">
+                <div className="max-w-full mx-auto pt-10 ">
                     <Outlet />
                 </div>
             </motion.main>

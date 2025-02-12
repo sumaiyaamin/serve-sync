@@ -53,7 +53,7 @@ const Footer = () => {
             </div>
 
             {/* Main Footer Content */}
-            <div className="max-w-7xl mx-auto px-4 pt-8 pb-12 sm:px-6 lg:px-8">
+            <div className="max-w-full mx-auto px-4 pt-8 pb-12 sm:px-6 lg:px-8">
                 {/* Top Section with Logo and Links */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-8">
                     {/* Brand Section */}
