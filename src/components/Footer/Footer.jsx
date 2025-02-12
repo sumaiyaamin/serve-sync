@@ -14,18 +14,10 @@ const Footer = () => {
                 { name: "Home", path: "/" },
                 { name: "Browse Opportunities", path: "/all-volunteer-posts" },
                 { name: "Create Opportunity", path: "/add-volunteer-post" },
-                { name: "Dashboard", path: "/manage-my-posts" },
+                { name: "Manage Posts", path: "/manage-my-posts" },
             ]
         },
-        {
-            title: "Resources",
-            links: [
-                { name: "How It Works", path: "/how-it-works" },
-                { name: "Success Stories", path: "/stories" },
-                { name: "FAQs", path: "/faqs" },
-                { name: "Contact Us", path: "/contact" },
-            ]
-        },
+        
         {
             title: "Connect",
             links: [
@@ -70,20 +62,7 @@ const Footer = () => {
                                 </h3>
                             </div>
                             
-                            {/* Theme Toggle Button */}
-                            <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={toggleTheme}
-                                className="p-2 rounded-full bg-gray-200 dark:bg-dark-700 hover:bg-gray-300 dark:hover:bg-dark-600 transition-colors duration-200"
-                                aria-label="Toggle theme"
-                            >
-                                {theme === 'dark' ? (
-                                    <FaSun className="text-yellow-400 w-5 h-5" />
-                                ) : (
-                                    <FaMoon className="text-gray-600 w-5 h-5" />
-                                )}
-                            </motion.button>
+                            
                         </motion.div>
                         
                         <p className="text-gray-600 dark:text-dark-secondary max-w-md">
@@ -165,7 +144,7 @@ const Footer = () => {
                         {/* Social Links */}
                         <div className="flex justify-center md:justify-end space-x-6">
                             <a 
-                                href="https://github.com/sumaiyaprova"
+                                href="https://github.com/sumaiyaamin"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-gray-600 dark:text-dark-secondary hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-300"
@@ -173,7 +152,7 @@ const Footer = () => {
                                 <FaGithub size={20} />
                             </a>
                             <a 
-                                href="https://linkedin.com/in/sumaiyaprova"
+                                href="https://www.linkedin.com/in/sumaiya-amin-prova01/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-gray-600 dark:text-dark-secondary hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-300"
@@ -181,7 +160,7 @@ const Footer = () => {
                                 <FaLinkedin size={20} />
                             </a>
                             <a 
-                                href="mailto:sumaiyaprova@gmail.com"
+                                href="mailto:sumaiya.prova321@gmail.com"
                                 className="text-gray-600 dark:text-dark-secondary hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-300"
                             >
                                 <FaEnvelope size={20} />

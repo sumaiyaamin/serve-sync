@@ -218,8 +218,9 @@ const Home = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             className="px-8 py-3 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors duration-300 shadow-lg"
-                        >
+                        > <Link to="/all-volunteer-posts">
                             Get Started Now
+                            </Link>
                         </motion.button>
                     </div>
                 </div>
