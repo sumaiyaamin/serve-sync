@@ -5,6 +5,7 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaHandsHelping, FaUsers, FaHandHoldingHeart } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
     const parallaxRef = useRef(null);
@@ -47,13 +48,15 @@ const Home = () => {
             title: "Support Local Communities",
             description: "Your time and skills can transform lives. Start volunteering now!",
             image: "https://i.ibb.co.com/jTkjw3f/The-Career-Benefits-of-Volunteering-During-Your-Job-Search-2.jpg",
-            cta: "Join Us"
+            cta: "Join Us",
+            route : '/login'
         },
         {
             title: "Together We Can Help",
             description: "Connect with causes that matter and make an impact in your community.",
             image: "https://i.ibb.co.com/QJmJfcn/25-Ways-to-Volunteer-in-Your-Community.jpg",
-            cta: "Learn More"
+            cta: "Learn More",
+            route : '/all-volunteer-posts'
         }
     ];
 
@@ -91,7 +94,9 @@ const Home = () => {
                                             whileTap={{ scale: 0.95 }}
                                             className="px-8 py-3 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors duration-300 shadow-lg"
                                         >
+                                            <Link to={slide.route}>
                                             {slide.cta}
+                                            </Link>
                                         </motion.button>
                                     </motion.div>
                                 </div>
