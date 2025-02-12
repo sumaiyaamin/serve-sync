@@ -70,7 +70,7 @@ const LoadingSpinner = () => (
     </div>
 );
 
-LoadingSpinner.propTypes = {};
+
 
 const ErrorState = ({ error, navigate }) => (
     <motion.div 
@@ -121,11 +121,11 @@ const ApplicationModal = ({
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8"
+                    className="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8"
                 >
                     {/* Modal content */}
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold text-gray-900">Volunteer Application</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Volunteer Application</h2>
                         <button
                             onClick={() => setShowModal(false)}
                             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
@@ -136,24 +136,24 @@ const ApplicationModal = ({
 
                     <form onSubmit={handleSubmitApplication} className="space-y-6">
                         {/* Post Information */}
-                        <div className="bg-orange-50 p-4 rounded-lg mb-6">
-                            <h3 className="text-lg font-semibold mb-4 text-gray-800">Post Details</h3>
+                        <div className="bg-orange-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
+                            <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Post Details</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-500">Title</label>
-                                    <p className="text-gray-800">{post.title}</p>
+                                    <p className="text-gray-800 dark:text-gray-300">{post.title}</p>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-500">Category</label>
-                                    <p className="text-gray-800">{post.category}</p>
+                                    <p className="text-gray-800 dark:text-gray-300">{post.category}</p>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-500">Location</label>
-                                    <p className="text-gray-800">{post.location}</p>
+                                    <p className="text-gray-800 dark:text-gray-300">{post.location}</p>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-500">Deadline</label>
-                                    <p className="text-gray-800">
+                                    <p className="text-gray-800 dark:text-gray-300">
                                         {new Date(post.deadline).toLocaleDateString()}
                                     </p>
                                 </div>
@@ -161,23 +161,23 @@ const ApplicationModal = ({
                         </div>
 
                         {/* Applicant Information */}
-                        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-                            <h3 className="text-lg font-semibold mb-4 text-gray-800">Your Information</h3>
+                        <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
+                            <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Your Information</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-500">Name</label>
-                                    <p className="text-gray-800">{user.displayName}</p>
+                                    <p className="text-gray-800 dark:text-gray-300">{user.displayName}</p>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-500">Email</label>
-                                    <p className="text-gray-800">{user.email}</p>
+                                    <p className="text-gray-800 dark:text-gray-300">{user.email}</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Suggestion Field */}
                         <div>
-                            <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                            <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 <FaRegCommentDots className="mr-2 text-orange-500" />
                                 Your Message
                             </label>
@@ -185,7 +185,7 @@ const ApplicationModal = ({
                                 value={suggestion}
                                 onChange={(e) => setSuggestion(e.target.value)}
                                 placeholder="Share why you'd like to volunteer and any relevant experience..."
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                                className="w-full dark:bg-gray-700 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
                                 rows="4"
                                 required
                             />
@@ -389,8 +389,8 @@ const VolunteerPostDetails = () => {
 
                         {/* Description */}
                         <div className="mb-8 ">
-                            <h2 className="text-2xl font-bold mb-4">About This Opportunity</h2>
-                            <p className="text-gray-700 leading-relaxed">{post.description}</p>
+                            <h2 className="text-2xl font-bold mb-4 dark:text-gray-100">About This Opportunity</h2>
+                            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{post.description}</p>
                         </div>
 
                         {/* Organizer Info */}
@@ -452,8 +452,8 @@ const InfoCard = ({ icon, label, value }) => (
     <div className="flex items-center space-x-3 bg-orange-50 dark:bg-gray-900 p-4 rounded-lg">
         {icon}
         <div>
-            <p className="text-sm text-gray-500">{label}</p>
-            <p className="font-semibold text-gray-800">{value}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-100">{label}</p>
+            <p className="font-semibold text-gray-800 dark:text-gray-100">{value}</p>
         </div>
     </div>
 );
